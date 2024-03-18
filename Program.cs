@@ -10,9 +10,6 @@ using System.Text.Json;
 
 using HttpClient http = new();
 
-ConnectionMultiplexer redis = ConnectionMultiplexer.Connect($"{Credentials.RedisIp},password={Credentials.RedisPassword}");
-IDatabase redisDb = redis.GetDatabase();
-
 // Game data. Grab it from the static URL.
 GameData gameData = await FetchGameData();
 Task gridGenerationTask = Terrain.GenerateTerrainGrids(gameData);
@@ -40,6 +37,9 @@ Character character = data.Characters.First();
 
 bool authenticated = false;
 bool started = false;
+
+ConnectionMultiplexer redis = ConnectionMultiplexer.Connect($"{Credentials.RedisIp},password={Credentials.RedisPassword}");
+IDatabase redisDb = redis.GetDatabase();
 
 SocketIOClient.SocketIO socketClient = new($"https://{server.Addr}:{server.Port}");
 SocketData socketData = new(socketClient, redisDb);
